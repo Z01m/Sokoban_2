@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\PashaDenyk\\Desktop\\Sokoban_2\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{96EB7CD9-2D64-4084-A6CD-F9DFE8C3021A}|Sokoban_2\\Sokoban_2.csproj|c:\\users\\pashadenyk\\desktop\\sokoban_2\\sokoban_2\\bfs.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{96EB7CD9-2D64-4084-A6CD-F9DFE8C3021A}|Sokoban_2\\Sokoban_2.csproj|solutionrelative:sokoban_2\\bfs.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{96EB7CD9-2D64-4084-A6CD-F9DFE8C3021A}|Sokoban_2\\Sokoban_2.csproj|c:\\users\\pashadenyk\\desktop\\sokoban_2\\sokoban_2\\map.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{96EB7CD9-2D64-4084-A6CD-F9DFE8C3021A}|Sokoban_2\\Sokoban_2.csproj|solutionrelative:sokoban_2\\map.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{96EB7CD9-2D64-4084-A6CD-F9DFE8C3021A}|Sokoban_2\\Sokoban_2.csproj|c:\\users\\pashadenyk\\desktop\\sokoban_2\\sokoban_2\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{96EB7CD9-2D64-4084-A6CD-F9DFE8C3021A}|Sokoban_2\\Sokoban_2.csproj|solutionrelative:sokoban_2\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Player.cs",
+              "DocumentMoniker": "C:\\Users\\PashaDenyk\\Desktop\\Sokoban_2\\Sokoban_2\\Player.cs",
+              "RelativeDocumentMoniker": "Sokoban_2\\Player.cs",
+              "ToolTip": "C:\\Users\\PashaDenyk\\Desktop\\Sokoban_2\\Sokoban_2\\Player.cs",
+              "RelativeToolTip": "Sokoban_2\\Player.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-24T19:52:34.316Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Map.cs",
+              "DocumentMoniker": "C:\\Users\\PashaDenyk\\Desktop\\Sokoban_2\\Sokoban_2\\Map.cs",
+              "RelativeDocumentMoniker": "Sokoban_2\\Map.cs",
+              "ToolTip": "C:\\Users\\PashaDenyk\\Desktop\\Sokoban_2\\Sokoban_2\\Map.cs",
+              "RelativeToolTip": "Sokoban_2\\Map.cs",
+              "ViewState": "AQIAAAIAAAAAAAAAAAAqwBoAAAATAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-24T19:52:33.963Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "bfs.cs",
+              "DocumentMoniker": "C:\\Users\\PashaDenyk\\Desktop\\Sokoban_2\\Sokoban_2\\bfs.cs",
+              "RelativeDocumentMoniker": "Sokoban_2\\bfs.cs",
+              "ToolTip": "C:\\Users\\PashaDenyk\\Desktop\\Sokoban_2\\Sokoban_2\\bfs.cs",
+              "RelativeToolTip": "Sokoban_2\\bfs.cs",
+              "ViewState": "AQIAAEEAAAAAAAAAAAAuwD0AAAAlAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-24T19:52:32.297Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

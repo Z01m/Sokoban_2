@@ -1,0 +1,14 @@
+H:\JetBrains\projects\Sokoban_2\Sokoban_2\bin\Release\net8.0\Sokoban_2.exe
+H:\JetBrains\projects\Sokoban_2\Sokoban_2\bin\Release\net8.0\Sokoban_2.deps.json
+H:\JetBrains\projects\Sokoban_2\Sokoban_2\bin\Release\net8.0\Sokoban_2.runtimeconfig.json
+H:\JetBrains\projects\Sokoban_2\Sokoban_2\bin\Release\net8.0\Sokoban_2.dll
+H:\JetBrains\projects\Sokoban_2\Sokoban_2\bin\Release\net8.0\Sokoban_2.pdb
+H:\JetBrains\projects\Sokoban_2\Sokoban_2\obj\Release\net8.0\Sokoban_2.GeneratedMSBuildEditorConfig.editorconfig
+H:\JetBrains\projects\Sokoban_2\Sokoban_2\obj\Release\net8.0\Sokoban_2.AssemblyInfoInputs.cache
+H:\JetBrains\projects\Sokoban_2\Sokoban_2\obj\Release\net8.0\Sokoban_2.AssemblyInfo.cs
+H:\JetBrains\projects\Sokoban_2\Sokoban_2\obj\Release\net8.0\Sokoban_2.csproj.CoreCompileInputs.cache
+H:\JetBrains\projects\Sokoban_2\Sokoban_2\obj\Release\net8.0\Sokoban_2.dll
+H:\JetBrains\projects\Sokoban_2\Sokoban_2\obj\Release\net8.0\refint\Sokoban_2.dll
+H:\JetBrains\projects\Sokoban_2\Sokoban_2\obj\Release\net8.0\Sokoban_2.pdb
+H:\JetBrains\projects\Sokoban_2\Sokoban_2\obj\Release\net8.0\Sokoban_2.genruntimeconfig.cache
+H:\JetBrains\projects\Sokoban_2\Sokoban_2\obj\Release\net8.0\ref\Sokoban_2.dll
