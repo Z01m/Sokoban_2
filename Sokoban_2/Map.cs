@@ -22,14 +22,18 @@ public class Map
     }
     
     public static string [] LevelMap =  {
-        "########",
-        "#X.....#",
-        "#@.....#",
-        "#....@.#", 
-        "#......#",
-        "#*...*.#",
-        "#......#",
-        "########"
+        ".............",
+        "....######...",
+        "....#.***#...",
+        ".####****#...",
+        ".#..###@.###.",
+        ".#.@.@..@@.#.",
+        ".#X.@.@....#.",
+        ".#...###...#.",
+        ".#####.#####.",
+        ".............",
+
+
     };
     
     public List<(int x, int y)> AllBox { get; set; }
@@ -50,28 +54,20 @@ public class Map
         LevelMap[y] = new string(row);
     }
 
-    public (int x, int y) GetPlayerPos() //находит игрока на карте и его позицию игрока 
+    public (int x, int y) GetPlayerPos() // находит игрока на карте и его позицию
     {
-        try
+        for (int i = 0; i < LevelMap.Length; i++)
         {
-            for (int i = 1; i < LevelMap.Length; i++)
+            for (int j = 0; j < LevelMap[i].Length; j++)
             {
-                for (int j = 1; i < LevelMap[i].Length; j++)
+                if (LevelMap[i][j] == 'X')
                 {
-                    if (LevelMap[i][j] == 'X')
-                    {
-                        return (i,j);
-                    }
+                    return (i, j);
                 }
             }
         }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-
-        return (0, 0);
+        // Если игрок не найден, можно вернуть значение по умолчанию или бросить исключение
+        return (-1, -1); // Или выбросить исключение по вашему выбору
     }
 
     public List<(int x, int y)> GetBoxPosition() //находит все ящики на карте и возвращает лист с их координатами 
@@ -87,7 +83,6 @@ public class Map
                 }
             }
         }
-
         return res;
     }
     
@@ -104,7 +99,6 @@ public class Map
                 }
             }
         }
-
         return res;
     }
 
@@ -140,6 +134,7 @@ public class Map
         {
             AllBox[index] = (playerPos.y + 2 * delta.y, playerPos.x + 2 * delta.x);
         }
+        ChangeMap((int)playerPos.y,(int)playerPos.x,'.');
     }
     
     public List<(int x,int y)> MoveBox((int x,int y) playerPos,(int x,int y) delta,List<(int x,int y)>boxes)

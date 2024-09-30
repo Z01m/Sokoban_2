@@ -12,3 +12,4 @@ H:\JetBrains\projects\Sokoban_2\Sokoban_2\obj\Release\net8.0\refint\Sokoban_2.dl
 H:\JetBrains\projects\Sokoban_2\Sokoban_2\obj\Release\net8.0\Sokoban_2.pdb
 H:\JetBrains\projects\Sokoban_2\Sokoban_2\obj\Release\net8.0\Sokoban_2.genruntimeconfig.cache
 H:\JetBrains\projects\Sokoban_2\Sokoban_2\obj\Release\net8.0\ref\Sokoban_2.dll
+H:\JetBrains\projects\Sokoban_2\Sokoban_2\obj\Release\net8.0\Sokoban_2.sourcelink.json
