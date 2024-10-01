@@ -53,6 +53,7 @@ public class bis
         BFSQueue.Enqueue(new State(Map.Instance.GetPlayerPos(),Map.Instance.GetBoxPosition(),Map.Instance.GetPointPosition(),null));
         foreach (var var in GenerateWiningState(Map.Instance.GetPointPosition()))
         {
+            //Console.Write(var.PlayerPosition);
             BISQueue.Enqueue(var);
         }
         
@@ -76,7 +77,7 @@ public class bis
             //bi s block
             var cur = BISQueue.Dequeue();
             BISVisited.Add(cur);
-            foreach (var move in GetPossibleMoves(cur))
+            foreach (var move in GetPossibleRevMoves(cur))
             {
                 if (!BISVisited.Contains(move) && !BISQueue.Contains(move))
                 {
@@ -102,10 +103,10 @@ public class bis
             foreach (var point in pointPos)
             {
                 (int x,int y) newPlayerPos = (point.x + move.dx, point.y + move.dy);
-                if (Map.LevelMap[newPlayerPos.y][newPlayerPos.x] != '#' &&
-                    Map.LevelMap[newPlayerPos.y][newPlayerPos.x] != '@')
+                if (Map.LevelMap[newPlayerPos.x][newPlayerPos.y] != '#' &&
+                    Map.LevelMap[newPlayerPos.x][newPlayerPos.y] != '@')
                 {
-                    winningState.Add(new State(newPlayerPos,pointPos,pointPos,null));
+                    winningState.Add(new State((newPlayerPos.y,newPlayerPos.x),pointPos,pointPos,null));
                 }
             }
         }
@@ -134,6 +135,30 @@ public class bis
         }
         return moves;
     }
-    
+
+    public List<State> GetPossibleRevMoves(State current)
+    {
+        Player player = new Player();
+        List<State> moves = new List<State>();
+        var directions = new (int x, int y)[]
+        {
+            (0, 1),  //up
+            (0, -1), //down
+            (1, 0),  //left
+            (-1, 0), //right    
+        };
+        foreach (var dir in directions)
+        {
+            var newPos = (current.PlayerPosition.x + dir.x, current.PlayerPosition.y + dir.y);
+            if (player.CanMove(current.PlayerPosition, dir, current.BoxPositions))
+            {
+                var tmpBoxes = Map.Instance.MoveBoxRevers(current.PlayerPosition, dir, current.BoxPositions);
+                
+                moves.Add(new State(newPos, tmpBoxes , current.PointPosition,current));
+            }
+        }
+
+        return moves;
+    }
     
 }

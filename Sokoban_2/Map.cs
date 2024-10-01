@@ -32,6 +32,14 @@ public class Map
         ".#...###...#.",
         ".#####.#####.",
         ".............",
+        /*"##############",
+        "#X...........#",
+        "#..@.........#",
+        "#........@...#",
+        "#............#",
+        "#..*.....*...#",
+        "#............#",
+        "##############"*/
 
 
     };
@@ -145,6 +153,31 @@ public class Map
         if (index != -1)
         {
             tmpBoxes[index] = (playerPos.y + 2 * delta.y, playerPos.x + 2 * delta.x);
+        }
+
+        return tmpBoxes;
+    }
+
+    public void MoveBoxRevers((int x, int y) playerPos, (int x, int y) delta)
+    {
+        int index = AllBox.FindIndex(box =>
+            box.x == playerPos.y - delta.y && box.y == playerPos.x - delta.x);
+        if (index != -1)
+        {
+            ChangeMap(AllBox[index].y,AllBox[index].x,'.');
+            AllBox[index] = (playerPos.y, playerPos.x);
+        }
+    }
+    
+    public List<(int x, int y)> MoveBoxRevers((int x, int y) playerPos, (int x, int y) delta,
+        List<(int x, int y)> boxes)
+    {
+        List<(int x,int y)> tmpBoxes =new(boxes);
+        int index = tmpBoxes.FindIndex(box =>
+            box.x == playerPos.y - delta.y && box.y == playerPos.x - delta.x);
+        if (index != -1)
+        {
+            tmpBoxes[index] = (playerPos.y, playerPos.x);
         }
 
         return tmpBoxes;

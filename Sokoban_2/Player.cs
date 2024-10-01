@@ -22,7 +22,7 @@ public class Player
         if (CanMove(playerPos, delta))
         {
             PlayerPos = (playerPos.x + delta.x,playerPos.y + delta.y);
-            Map.Instance.MoveBox(playerPos, delta);
+            Map.Instance.MoveBoxRevers(playerPos, delta);
             Map.Instance.ChangeBoxOnMap();
         }
     }
@@ -34,8 +34,8 @@ public class Player
              Map.LevelMap[playerPos.y + 2 * delta.y][playerPos.x + 2 * delta.x] == '#'))
             return false;
         return Map.LevelMap[playerPos.y+delta.y][playerPos.x+delta.x]!='#';
-    }   
-     
+    }
+    
     public bool CanMove((int x, int y) playerPos, (int x, int y) delta,List<(int x,int y)> boxes)
     {
         if (Map.Instance.BoxIsFind(playerPos.x + delta.x, playerPos.y + delta.y,boxes) &&
