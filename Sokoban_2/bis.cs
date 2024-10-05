@@ -111,7 +111,7 @@ public class bis
             {
                 (int x,int y) newPlayerPos = (point.x + move.dx, point.y + move.dy);
                 if (Map.LevelMap[newPlayerPos.x][newPlayerPos.y] != '#' &&
-                    Map.LevelMap[newPlayerPos.x][newPlayerPos.y] != '@')
+                    !pointPos.Contains(newPlayerPos))
                 {
                     winningState.Add(new State((newPlayerPos.y,newPlayerPos.x),pointPos,pointPos,null));
                 }
