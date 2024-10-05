@@ -9,6 +9,9 @@ public class bis
     
     public Queue<State> BISQueue { get; set; } = new Queue<State>();
     public List<State> BISVisited { get; set; } = new List<State>();
+
+    public List<State> MovesBFS { get; set; } = new List<State>();
+    public List<State> MovesBIS { get; set; } = new List<State>();
     public class State
     {
         public State prevMove = null;
@@ -37,6 +40,7 @@ public class bis
         }
     }
     
+    
     public bool IsGoalState(Queue<State>BFS,Queue<State>BIS) //проверяет на победу
     {
         foreach (var state in BFS)
@@ -62,6 +66,9 @@ public class bis
             if (IsGoalState(BFSQueue, BISQueue))
             {
                 Console.WriteLine("win");
+                setMovesBFS(BFSQueue.Dequeue());
+                setMovesBIS(BISQueue.Dequeue());
+                ReadAllMoves();
                 return;
             }
             //bfs block
@@ -152,13 +159,42 @@ public class bis
             var newPos = (current.PlayerPosition.x + dir.x, current.PlayerPosition.y + dir.y);
             if (player.CanMove(current.PlayerPosition, dir, current.BoxPositions))
             {
+                moves.Add(new State(newPos,current.BoxPositions,current.PointPosition,current)); //если игрок не двигает коробку
                 var tmpBoxes = Map.Instance.MoveBoxRevers(current.PlayerPosition, dir, current.BoxPositions);
                 
-                moves.Add(new State(newPos, tmpBoxes , current.PointPosition,current));
+                moves.Add(new State(newPos, tmpBoxes , current.PointPosition,current));//если игрок  двигает коробку
             }
         }
 
         return moves;
     }
     
+    public void ReadAllMoves()
+    {
+        Console.WriteLine("BFS:");
+        for(int i=0;i<MovesBFS.Count;i++)
+        {
+            Console.WriteLine($"({MovesBFS[i].PlayerPosition.x} {MovesBFS[i].PlayerPosition.y})");
+        }
+        Console.WriteLine("BIS:");
+        for (int i = 0; i < MovesBIS.Count; i++)
+        {
+            Console.WriteLine($"({MovesBIS[i].PlayerPosition.x} {MovesBIS[i].PlayerPosition.y})");
+        }
+    }
+    
+    public void setMovesBFS(State bfs)//обязательно переименовать
+    {
+        MovesBFS.Add(bfs);
+        if (bfs.prevMove != null)
+            setMovesBFS(bfs.prevMove);
+       
+    }
+
+    public void setMovesBIS(State bis)
+    {
+        MovesBIS.Add(bis);
+        if (bis.prevMove != null)
+            setMovesBFS(bis.prevMove);
+    }
 }
