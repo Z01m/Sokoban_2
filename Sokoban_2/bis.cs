@@ -40,18 +40,22 @@ public class bis
         }
     }
     
-    
     public bool IsGoalState(Queue<State>BFS,List<State> BFSVisited, Queue<State>BIS, List<State> BISVisited) //проверяет на победу
     {
         foreach (var state in BFS)
         {
             if (BIS.Contains(state) || BISVisited.Contains(state))
+            {
+                setMovesBFS(state);
                 return true;
+            }
         }
         foreach (var state in BIS)
         {
-            if (BFSVisited.Contains(state) )
+            if (BFSVisited.Contains(state))
+            {
                 return true;
+            }
         }
 
         return false;
@@ -66,13 +70,11 @@ public class bis
             BISQueue.Enqueue(var);
         }
         
-        while (BFSQueue.Count > 0 && BISQueue.Count > 0)
+        while (BFSQueue.Count > 0 || BISQueue.Count > 0)
         {
             if (IsGoalState(BFSQueue,BFSVisited, BISQueue,BISVisited))
             {
                 Console.WriteLine("win");
-                setMovesBFS(BFSQueue.Dequeue());
-                setMovesBIS(BISQueue.Dequeue());
                 ReadAllMoves();
                 return;
             }
@@ -165,7 +167,7 @@ public class bis
             if (Map.LevelMap[newPos.y][newPos.x]=='.')
             {
                 State moveState = new State(newPos, current.BoxPositions, current.PointPosition, current);
-                moves.Add(moveState); //убрать?
+                moves.Add(moveState);
                 var tmpBoxes = Map.Instance.MoveBoxRevers(current.PlayerPosition, dir, current.BoxPositions);
 
                 State boxState = new State(newPos, tmpBoxes, current.PointPosition, current);
