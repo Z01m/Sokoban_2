@@ -41,11 +41,16 @@ public class bis
     }
     
     
-    public bool IsGoalState(Queue<State>BFS,Queue<State>BIS) //проверяет на победу
+    public bool IsGoalState(Queue<State>BFS,List<State> BFSVisited, Queue<State>BIS, List<State> BISVisited) //проверяет на победу
     {
         foreach (var state in BFS)
         {
-            if (BIS.Contains(state))
+            if (BIS.Contains(state) || BISVisited.Contains(state))
+                return true;
+        }
+        foreach (var state in BIS)
+        {
+            if (BFSVisited.Contains(state) )
                 return true;
         }
 
@@ -63,7 +68,7 @@ public class bis
         
         while (BFSQueue.Count > 0 && BISQueue.Count > 0)
         {
-            if (IsGoalState(BFSQueue, BISQueue))
+            if (IsGoalState(BFSQueue,BFSVisited, BISQueue,BISVisited))
             {
                 Console.WriteLine("win");
                 setMovesBFS(BFSQueue.Dequeue());
@@ -156,13 +161,17 @@ public class bis
         };
         foreach (var dir in directions)
         {
-            var newPos = (current.PlayerPosition.x + dir.x, current.PlayerPosition.y + dir.y);
-            if (player.CanMove(current.PlayerPosition, dir, current.BoxPositions))
+            (int x, int y) newPos = (current.PlayerPosition.x + dir.x, current.PlayerPosition.y + dir.y);
+            if (Map.LevelMap[newPos.y][newPos.x]=='.')
             {
-                moves.Add(new State(newPos,current.BoxPositions,current.PointPosition,current)); //если игрок не двигает коробку
+                State moveState = new State(newPos, current.BoxPositions, current.PointPosition, current);
+                moves.Add(moveState); //убрать?
                 var tmpBoxes = Map.Instance.MoveBoxRevers(current.PlayerPosition, dir, current.BoxPositions);
-                
-                moves.Add(new State(newPos, tmpBoxes , current.PointPosition,current));//если игрок  двигает коробку
+
+                State boxState = new State(newPos, tmpBoxes, current.PointPosition, current);
+                    
+                if (!moveState.Equals(boxState))
+                    moves.Add(boxState);//если игрок  двигает коробку
             }
         }
 
@@ -174,7 +183,7 @@ public class bis
         Console.WriteLine("BFS:");
         for(int i=0;i<MovesBFS.Count;i++)
         {
-            Console.WriteLine($"({MovesBFS[i].PlayerPosition.x} {MovesBFS[i].PlayerPosition.y})");
+            Console.WriteLine($"({i} x={MovesBFS[i].PlayerPosition.x} y={MovesBFS[i].PlayerPosition.y})");
         }
         Console.WriteLine("BIS:");
         for (int i = 0; i < MovesBIS.Count; i++)
