@@ -11,10 +11,10 @@ namespace Sokoban_2
         {
             Map.Instance.AllBox = Map.Instance.GetBoxPosition();
             Map.Instance.AllPoint = Map.Instance.GetPointPosition();
-            bfs bfs = new bfs();
-            bfs._BFS_();
-            /*bis bis = new bis();
-            bis._BIS_();*/
+            /*bfs bfs = new bfs();
+            bfs._BFS_();*/
+            bis bis = new bis();
+            bis._BIS_();
             /*Player player = new Player();
            player.PlayerPos = Map.Instance.GetPlayerPos();
            Map.Instance.AllBox = Map.Instance.GetBoxPosition();

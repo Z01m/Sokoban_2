@@ -47,6 +47,8 @@ public class bis
             if (BIS.Contains(state) || BISVisited.Contains(state))
             {
                 setMovesBFS(state);
+                State tmp = IndexOf(BIS, state);
+                setMovesBIS(tmp);
                 return true;
             }
         }
@@ -54,6 +56,9 @@ public class bis
         {
             if (BFSVisited.Contains(state))
             {
+                setMovesBIS(state);
+                State tmp = IndexOf(BFS, state);
+                setMovesBFS(tmp);
                 return true;
             }
         }
@@ -182,13 +187,14 @@ public class bis
     
     public void ReadAllMoves()
     {
-        Console.WriteLine("BFS:");
+        //Console.WriteLine("BFS:");
+        MovesBFS.Reverse();
         for(int i=0;i<MovesBFS.Count;i++)
         {
             Console.WriteLine($"({i} x={MovesBFS[i].PlayerPosition.x} y={MovesBFS[i].PlayerPosition.y})");
         }
-        Console.WriteLine("BIS:");
-        for (int i = 0; i < MovesBIS.Count; i++)
+        //Console.WriteLine("BIS:");
+        for (int i = 1; i < MovesBIS.Count; i++)
         {
             Console.WriteLine($"({MovesBIS[i].PlayerPosition.x} {MovesBIS[i].PlayerPosition.y})");
         }
@@ -206,6 +212,22 @@ public class bis
     {
         MovesBIS.Add(bis);
         if (bis.prevMove != null)
-            setMovesBFS(bis.prevMove);
+            setMovesBIS(bis.prevMove);
     }
+    
+    public  State IndexOf( Queue<State> collection, State searchItem)
+    {
+        State index;
+
+        foreach (var item in collection)
+        {
+            if (item.Equals(searchItem))
+            {
+                return item;
+            }
+        }
+
+        return null;
+    }
+    
 }
