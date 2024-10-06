@@ -48,6 +48,8 @@ public class bis
             {
                 setMovesBFS(state);
                 State tmp = IndexOf(BIS, state);
+                if (tmp == null)
+                    tmp = IndexOf(BISVisited, state);
                 setMovesBIS(tmp);
                 return true;
             }
@@ -58,6 +60,8 @@ public class bis
             {
                 setMovesBIS(state);
                 State tmp = IndexOf(BFS, state);
+                if (tmp == null)
+                    tmp = IndexOf(BFSVisited, state);
                 setMovesBFS(tmp);
                 return true;
             }
@@ -75,7 +79,7 @@ public class bis
             BISQueue.Enqueue(var);
         }
         
-        while (BFSQueue.Count > 0 || BISQueue.Count > 0)
+        while (true)
         {
             if (IsGoalState(BFSQueue,BFSVisited, BISQueue,BISVisited))
             {
@@ -84,23 +88,30 @@ public class bis
                 return;
             }
             //bfs block
-            var current = BFSQueue.Dequeue();
-            BFSVisited.Add(current);
-            foreach (var move in GetPossibleMoves(current))
+            if (BFSQueue.Count > 0)
             {
-                if (!BFSVisited.Contains(move) && !BFSQueue.Contains(move))
+                var current = BFSQueue.Dequeue();
+                BFSVisited.Add(current);
+                foreach (var move in GetPossibleMoves(current))
                 {
-                    BFSQueue.Enqueue(move);
+                    if (!BFSVisited.Contains(move) && !BFSQueue.Contains(move))
+                    {
+                        BFSQueue.Enqueue(move);
+                    }
                 }
             }
+
             //bi s block
-            var cur = BISQueue.Dequeue();
-            BISVisited.Add(cur);
-            foreach (var move in GetPossibleRevMoves(cur))
+            if (BISQueue.Count > 0)
             {
-                if (!BISVisited.Contains(move) && !BISQueue.Contains(move))
+                var cur = BISQueue.Dequeue();
+                BISVisited.Add(cur);
+                foreach (var move in GetPossibleRevMoves(cur))
                 {
-                    BISQueue.Enqueue(move);
+                    if (!BISVisited.Contains(move) && !BISQueue.Contains(move))
+                    {
+                        BISQueue.Enqueue(move);
+                    }
                 }
             }
         }
@@ -229,5 +240,18 @@ public class bis
 
         return null;
     }
-    
+    public  State IndexOf( List<State> collection, State searchItem)
+    {
+        State index;
+
+        foreach (var item in collection)
+        {
+            if (item.Equals(searchItem))
+            {
+                return item;
+            }
+        }
+
+        return null;
+    }
 }
