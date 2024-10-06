@@ -121,50 +121,57 @@ public class bis
     public List<State> GenerateWiningState(List<(int x, int y)> pointPos)
     {
         List<State> winningState = new List<State>();
-        var moves = new List<(int dx, int dy)> //инвертирован 
+        var moves = new List<(int dx, int dy)>
         {
-            (0, 1),  // Вверх
-            (0, -1), // Вниз
-            (1, 0),  // Вправо
-            (-1, 0)  // Влево
+            (0, 1),   // Вверх
+            (0, -1),  // Вниз
+            (1, 0),   // Вправо
+            (-1, 0)   // Влево
         };
+
         foreach (var move in moves)
         {
             foreach (var point in pointPos)
             {
-                (int x,int y) newPlayerPos = (point.x + move.dx, point.y + move.dy);
-                if (Map.LevelMap[newPlayerPos.x][newPlayerPos.y] != '#' &&
+                (int x, int y) newPlayerPos = (point.x + move.dx, point.y + move.dy);
+            
+                // Check bounds and if the position is walkable
+                if (Map.LevelMap[newPlayerPos.y][newPlayerPos.x] != '#' &&
                     !pointPos.Contains(newPlayerPos))
                 {
-                    winningState.Add(new State((newPlayerPos.y,newPlayerPos.x),pointPos,pointPos,null));
+                    winningState.Add(new State(newPlayerPos, pointPos, pointPos, null));
                 }
             }
         }
+
         return winningState;
     }
     public IEnumerable<State> GetPossibleMoves(State current)
+{
+    Player player = new Player();
+    List<State> moves = new List<State>();
+  
+    var directions = new (int dx, int dy)[]
     {
-        Player player = new Player();
-        List<State> moves = new List<State>();
-        var directions = new (int x, int y)[]
+        (0, 1),   // Вниз
+        (0, -1),  // Вверх
+        (1, 0),   // Вправо
+        (-1, 0)   // Влево    
+    };
+
+    foreach (var dir in directions)
+    {
+        var newPos = (current.PlayerPosition.x + dir.dx, current.PlayerPosition.y + dir.dy);
+        
+        if (player.CanMove(current.PlayerPosition, dir, current.BoxPositions))
         {
-            (0, 1),  //down
-            (0, -1), //up
-            (1, 0),  //right
-            (-1, 0), //left    
-        };
-        foreach (var dir in directions)
-        {
-            var newPos = (current.PlayerPosition.x + dir.x, current.PlayerPosition.y + dir.y);
-            if (player.CanMove(current.PlayerPosition, dir,current.BoxPositions))
-            {
-                var tmpBoxes = Map.Instance.MoveBox(current.PlayerPosition, dir, current.BoxPositions);
-                
-                moves.Add(new State(newPos, tmpBoxes , current.PointPosition,current));
-            }
+            var tmpBoxes = Map.Instance.MoveBox(current.PlayerPosition, dir, current.BoxPositions);
+            moves.Add(new State(newPos, tmpBoxes, current.PointPosition, current));
         }
-        return moves;
     }
+
+    return moves;
+}
 
     public List<State> GetPossibleRevMoves(State current)
     {
@@ -204,7 +211,7 @@ public class bis
         {
             Console.WriteLine($"({i} x={MovesBFS[i].PlayerPosition.x} y={MovesBFS[i].PlayerPosition.y})");
         }
-        //Console.WriteLine("BIS:");
+        Console.WriteLine("BIS:");
         for (int i = 1; i < MovesBIS.Count; i++)
         {
             Console.WriteLine($"({MovesBIS[i].PlayerPosition.x} {MovesBIS[i].PlayerPosition.y})");

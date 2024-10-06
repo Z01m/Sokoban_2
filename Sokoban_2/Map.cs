@@ -20,61 +20,40 @@ public class Map
             return instance;
         }
     }
-    
-    public static string [] LevelMap =  {
-        /*".............",
-        "....######...",
-        "....#.***#...",
-        ".####****#...",
-        ".#..###@.###.",
-        ".#.@.@..@@.#.",
-        ".#X.@.@....#.",
-        ".#...###...#.",
-        ".#####.#####.",
-        ".............",*/
+
+    public static string[] LevelMap =  {
+        "##########",
+        "#X.......#",
+        "#..@....@#",
+        "#........#",
+        "#..*....*#",
+        "##########"
         
-        "#######",
+        /*"#######",
         "#*.#..#",
         "#..@..#",
         "#*.@#X#",
         "#..@..#",
         "#*.#..#",
-        "#######"
+        "#######"*/
         
-        /*"...##########...",
-        "...#**..#...#...",
-        "...#**......#...",
-        "...#**..#..####.",
-        "..#######..#..##",
-        "..#............#",
-        "..#..#..##..#..#",
-        "####.##..####.##",
-        "#..@..#####.#..#",
-        "#.#.@..@..#.@..#",
-        "#.X@..@...#...##",
-        "####.##.#######.",
-        "...#....#.......",
-        "...######......."*/
-
-        /*"##########",
-        "#X.......#",
-        "#..@....@#",
-        "#........#",
-        "#..*....*#",
-        "##########"*/
+        /*"################################",
+        "#..X.....@..................*..#",
+        "################################"*/
+        
     };
-    
+
     public List<(int x, int y)> AllBox { get; set; }
     public List<(int x, int y)> AllPoint { get; set; }
-    
-    public void DrawMap(string [] map)
+
+    public void DrawMap(string[] map)
     {
         foreach (var str in map)
         {
             Console.WriteLine(str);
         }
     }
-    
+
     public void ChangeMap(int x, int y, char c) // функция для изменения карты
     {
         char[] row = LevelMap[y].ToCharArray();
@@ -90,11 +69,10 @@ public class Map
             {
                 if (LevelMap[i][j] == 'X')
                 {
-                    return (i, j);
+                    return (j, i); // (column x, row y)
                 }
             }
         }
-        // Если игрок не найден, можно вернуть значение по умолчанию или бросить исключение
         return (-1, -1); // Или выбросить исключение по вашему выбору
     }
 
@@ -107,13 +85,13 @@ public class Map
             {
                 if (LevelMap[i][j] == '@')
                 {
-                    res.Add((i,j));
+                    res.Add((j, i)); // (column x, row y)
                 }
             }
         }
         return res;
     }
-    
+
     public List<(int x, int y)> GetPointPosition() //находит все точки на карте и возвращает лист с их координатами 
     {
         List<(int x, int y)> res = new List<(int x, int y)>();
@@ -123,7 +101,7 @@ public class Map
             {
                 if (LevelMap[i][j] == '*')
                 {
-                    res.Add((i,j));
+                    res.Add((j, i)); // (column x, row y)
                 }
             }
         }
@@ -132,47 +110,43 @@ public class Map
 
     public bool BoxIsFind(int x, int y) //проверяет есть ли ящик по данным координатам
     {
-        int index = AllBox.FindIndex(box => box.x == y && box.y == x);
-        if (index != -1)
-            return true;
-        return false;
+        int index = AllBox.FindIndex(box => box.x == x && box.y == y); // Fix: (x, y)
+        return index != -1;
     }
-    
-    public bool BoxIsFind(int x, int y,List<(int x,int y)> boxes) //проверяет есть ли ящик по данным координатам
+
+    public bool BoxIsFind(int x, int y, List<(int x, int y)> boxes) //проверяет есть ли ящик по данным координатам
     {
-        int index = boxes.FindIndex(box => box.x == y && box.y == x);
-        if (index != -1)
-            return true;
-        return false;
+        int index = boxes.FindIndex(box => box.x == x && box.y == y); // Fix: (x, y)
+        return index != -1;
     }
 
     public void ChangeBoxOnMap()
     {
         foreach (var vec in AllBox)
         {
-            ChangeMap((int)vec.y,(int)vec.x,'@');
+            ChangeMap(vec.x, vec.y, '@'); // Fix: (x, y)
         }
     }
 
-    public void MoveBox((int x,int y) playerPos,(int x,int y) delta)
+    public void MoveBox((int x, int y) playerPos, (int x, int y) delta)
     {
         int index = AllBox.FindIndex(box =>
-            box.x == playerPos.y + delta.y && box.y == playerPos.x + delta.x);
+            box.x == playerPos.x + delta.x && box.y == playerPos.y + delta.y); // Fix: (x, y)
         if (index != -1)
         {
-            AllBox[index] = (playerPos.y + 2 * delta.y, playerPos.x + 2 * delta.x);
+            AllBox[index] = (playerPos.x + 2 * delta.x, playerPos.y + 2 * delta.y); // Fix: (x, y)
         }
-        ChangeMap((int)playerPos.y,(int)playerPos.x,'.');
+        ChangeMap(playerPos.x, playerPos.y, '.'); // Fix: (x, y)
     }
-    
-    public List<(int x,int y)> MoveBox((int x,int y) playerPos,(int x,int y) delta,List<(int x,int y)>boxes)
+
+    public List<(int x, int y)> MoveBox((int x, int y) playerPos, (int x, int y) delta, List<(int x, int y)> boxes)
     {
-        List<(int x,int y)> tmpBoxes =new(boxes);
+        List<(int x, int y)> tmpBoxes = new(boxes);
         int index = tmpBoxes.FindIndex(box =>
-            box.x == playerPos.y + delta.y && box.y == playerPos.x + delta.x);
+            box.x == playerPos.x + delta.x && box.y == playerPos.y + delta.y); // Fix: (x, y)
         if (index != -1)
         {
-            tmpBoxes[index] = (playerPos.y + 2 * delta.y, playerPos.x + 2 * delta.x);
+            tmpBoxes[index] = (playerPos.x + 2 * delta.x, playerPos.y + 2 * delta.y); // Fix: (x, y)
         }
 
         return tmpBoxes;
@@ -181,23 +155,22 @@ public class Map
     public void MoveBoxRevers((int x, int y) playerPos, (int x, int y) delta)
     {
         int index = AllBox.FindIndex(box =>
-            box.x == playerPos.y - delta.y && box.y == playerPos.x - delta.x);
+            box.x == playerPos.x - delta.x && box.y == playerPos.y - delta.y); // Fix: (x, y)
         if (index != -1)
         {
-            ChangeMap(AllBox[index].y,AllBox[index].x,'.');
-            AllBox[index] = (playerPos.y, playerPos.x);
+            ChangeMap(AllBox[index].x, AllBox[index].y, '.'); // Fix: (x, y)
+            AllBox[index] = (playerPos.x, playerPos.y); // Fix: (x, y)
         }
     }
-    
-    public List<(int x, int y)> MoveBoxRevers((int x, int y) playerPos, (int x, int y) delta,
-        List<(int x, int y)> boxes)
+
+    public List<(int x, int y)> MoveBoxRevers((int x, int y) playerPos, (int x, int y) delta, List<(int x, int y)> boxes)
     {
-        List<(int x,int y)> tmpBoxes =new(boxes);
+        List<(int x, int y)> tmpBoxes = new(boxes);
         int index = tmpBoxes.FindIndex(box =>
-            box.x == playerPos.y - delta.y && box.y == playerPos.x - delta.x);
+            box.x == playerPos.x - delta.x && box.y == playerPos.y - delta.y); // Fix: (x, y)
         if (index != -1)
         {
-            tmpBoxes[index] = (playerPos.y, playerPos.x);
+            tmpBoxes[index] = (playerPos.x, playerPos.y); // Fix: (x, y)
         }
 
         return tmpBoxes;
@@ -208,7 +181,7 @@ public class Map
         int count = 0;
         foreach (var point in AllPoint)
         {
-            if (BoxIsFind(point.y, point.x))
+            if (BoxIsFind(point.x, point.y)) // Fix: (x, y)
                 count++;
         }
         return count == AllBox.Count;
