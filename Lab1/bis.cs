@@ -55,27 +55,27 @@ public class bis
     {
         foreach (var state in BFS)
         {
-            if (BIS.Contains(state) || BISVisited.Contains(state))
+            State tmp = IndexOf(BIS, state);
+            if (tmp == null)
             {
-                setMovesBFS(state);
-                State tmp = IndexOf(BIS, state);
+                tmp = IndexOf(BISVisited, state);
                 if (tmp == null)
-                    tmp = IndexOf(BISVisited, state);
-                setMovesBIS(tmp);
-                return true;
+                    continue;
             }
+            setMovesBIS(tmp);
+            setMovesBFS(state);
+            return true;
         }
         foreach (var state in BIS)
         {
-            if (BFSVisited.Contains(state))
+            State tmp = IndexOf(BFSVisited, state);
+            if (tmp == null)
             {
-                setMovesBIS(state);
-                State tmp = IndexOf(BFS, state);
-                if (tmp == null)
-                    tmp = IndexOf(BFSVisited, state);
-                setMovesBFS(tmp);
-                return true;
+                continue;
             }
+            setMovesBIS(state);
+            setMovesBFS(tmp);
+            return true;
         }
 
         return false;
@@ -92,7 +92,7 @@ public class bis
 
         while (true)
         {
-            countIteration++;
+            countIteration++;//++
             if (IsGoalState(BFSQueue, BFSVisited, BISQueue, BISVisited))
             {
                 Console.WriteLine("win");
@@ -106,6 +106,7 @@ public class bis
                 BFSVisited.Add(current);
                 foreach (var move in GetPossibleMoves(current))
                 {
+                    countNode++;//++
                     if (!BFSVisited.Contains(move) && !BFSQueue.Contains(move))
                     {
                         BFSQueue.Enqueue(move);
@@ -120,6 +121,7 @@ public class bis
                 BISVisited.Add(cur);
                 foreach (var move in GetPossibleRevMoves(cur))
                 {
+                    countNode++;//++
                     if (!BISVisited.Contains(move) && !BISQueue.Contains(move))
                     {
                         BISQueue.Enqueue(move);
@@ -133,49 +135,55 @@ public class bis
     public List<State> GenerateWiningState(List<(int x, int y)> pointPos)
     {
         List<State> winningState = new List<State>();
-        var moves = new List<(int dx, int dy)> //инвертирован 
+        var moves = new List<(int dx, int dy)>
         {
-            (0, 1),  // Вверх
-            (0, -1), // Вниз
-            (1, 0),  // Вправо
-            (-1, 0)  // Влево
+            (0, 1),   // Вверх
+            (0, -1),  // Вниз
+            (1, 0),   // Вправо
+            (-1, 0)   // Влево
         };
-        foreach (var move in moves)
+
+        foreach (var point in pointPos)
         {
-            foreach (var point in pointPos)
+            foreach (var move in moves)
             {
                 (int x, int y) newPlayerPos = (point.x + move.dx, point.y + move.dy);
-                if (Map.LevelMap[newPlayerPos.x][newPlayerPos.y] != '#' &&
+
+                // Check bounds and if the position is walkable
+                if (Map.LevelMap[newPlayerPos.y][newPlayerPos.x] != '#' &&
                     !pointPos.Contains(newPlayerPos))
                 {
-                    winningState.Add(new State((newPlayerPos.y, newPlayerPos.x), pointPos, pointPos, null));
+                    winningState.Add(new State(newPlayerPos, pointPos, pointPos, null));
                 }
             }
         }
+
         return winningState;
     }
     public IEnumerable<State> GetPossibleMoves(State current)
     {
         Player player = new Player();
         List<State> moves = new List<State>();
-        var directions = new (int x, int y)[]
+
+        var directions = new (int dx, int dy)[]
         {
-            (0, 1),  //down
-            (0, -1), //up
-            (1, 0),  //right
-            (-1, 0), //left    
+        (0, 1),   // Вниз
+        (0, -1),  // Вверх
+        (1, 0),   // Вправо
+        (-1, 0)   // Влево    
         };
+
         foreach (var dir in directions)
         {
-            var newPos = (current.PlayerPosition.x + dir.x, current.PlayerPosition.y + dir.y);
+            var newPos = (current.PlayerPosition.x + dir.dx, current.PlayerPosition.y + dir.dy);
+
             if (player.CanMove(current.PlayerPosition, dir, current.BoxPositions))
             {
                 var tmpBoxes = Map.Instance.MoveBox(current.PlayerPosition, dir, current.BoxPositions);
-
                 moves.Add(new State(newPos, tmpBoxes, current.PointPosition, current));
-                countNode++;
             }
         }
+
         return moves;
     }
 
@@ -193,52 +201,21 @@ public class bis
         foreach (var dir in directions)
         {
             (int x, int y) newPos = (current.PlayerPosition.x + dir.x, current.PlayerPosition.y + dir.y);
-            if (Map.LevelMap[newPos.y][newPos.x] == '.')
+            if (Map.LevelMap[newPos.y][newPos.x] != '#' && !current.BoxPositions.Contains(newPos) || current.PointPosition.Contains(newPos) && !current.BoxPositions.Contains(newPos))
             {
                 State moveState = new State(newPos, current.BoxPositions, current.PointPosition, current);
                 moves.Add(moveState);
-                countNode++;
                 var tmpBoxes = Map.Instance.MoveBoxRevers(current.PlayerPosition, dir, current.BoxPositions);
 
                 State boxState = new State(newPos, tmpBoxes, current.PointPosition, current);
 
                 if (!moveState.Equals(boxState))
-                {
                     moves.Add(boxState);//если игрок  двигает коробку
-                    countNode++;
-                }
             }
         }
 
         return moves;
     }
-
-    public void ReadAllMoves()
-    {
-        Console.WriteLine("BFS:");
-        MovesBFS.Reverse();
-        MovesALL = MovesBFS;
-        //MovesALL.AddRange(MovesBIS);
-        for (int i = 0; i < MovesBFS.Count; i++)//начинать с первого?
-        {
-            Console.WriteLine($"({i} x={MovesBFS[i].PlayerPosition.x} y={MovesBFS[i].PlayerPosition.y})");
-        }
-        Console.WriteLine("BIS:");
-        for (int i = 1; i < MovesBIS.Count; i++)
-        {
-            MovesALL.Add(MovesBIS[i]);
-            Console.WriteLine($"({MovesBIS[i].PlayerPosition.x} {MovesBIS[i].PlayerPosition.y})");
-        }
-        Console.WriteLine("All Moves");
-        for (int i = 0; i < MovesALL.Count; i++)
-        {
-            Console.WriteLine($"{i} x={MovesALL[i].PlayerPosition.x} y={MovesALL[i].PlayerPosition.y}");
-        }
-        //MovesALL.Reverse();
-        MovesALLReverse = MovesALL;
-        MovesALLReverse.Reverse();
-    }
-
     public void setMovesBFS(State bfs)//обязательно переименовать
     {
         MovesBFS.Add(bfs);
@@ -282,6 +259,36 @@ public class bis
 
         return null;
     }
+
+    public void ReadAllMoves()
+    {
+        //Console.WriteLine("BFS:");
+        int count = 0;
+        MovesBFS.Reverse();
+        MovesALL = MovesBFS;//++
+        for (int i = 0; i < MovesBFS.Count; i++)
+        {
+            count++;
+            Console.WriteLine($"({i} x={MovesBFS[i].PlayerPosition.x} y={MovesBFS[i].PlayerPosition.y})");
+        }
+        Console.WriteLine("BIS:");
+        for (int i = 1; i < MovesBIS.Count; i++)
+        {
+            count++;
+            MovesALL.Add(MovesBIS[i]);//++
+            Console.WriteLine($"({MovesBIS[i].PlayerPosition.x} {MovesBIS[i].PlayerPosition.y})");
+        }
+        Console.WriteLine(count);
+        Console.WriteLine("MovesALL");
+        for (int i = 0; i < MovesALL.Count; i++)
+        {
+            Console.WriteLine($"({i} x={MovesALL[i].PlayerPosition.x} y={MovesALL[i].PlayerPosition.y})");
+        }
+        MovesALL.Reverse();//++ не знаю почему он перевернулся
+        MovesALLReverse = MovesALL;//++
+        MovesALLReverse.Reverse();//++
+    }
+
     public int GetCountNode()
     {
         return countNode;
@@ -310,6 +317,7 @@ public class bis
         {
             Map.Instance.DrawClearMap();//функция по очистке карты -> всё что не точка и не стена делать точкой
             player.DrawPlayer(MovesALL[indexMovesWin].PlayerPosition);//отрисовка игрока
+            Console.WriteLine($"MovesAll[{indexMovesWin}] x = {MovesALL[indexMovesWin].PlayerPosition.x} y = {MovesALL[indexMovesWin].PlayerPosition.y}");
             for (int i = 0; i < MovesALL[indexMovesWin].PointPosition.Count; i++)
                 Map.Instance.DrawPoint(MovesALL[indexMovesWin].PointPosition[i]);//отрисовка точек
             for (int i = 0; i < MovesALL[indexMovesWin].BoxPositions.Count; i++)
