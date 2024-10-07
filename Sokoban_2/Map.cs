@@ -22,12 +22,37 @@ public class Map
     }
 
     public static string[] LevelMap =  {
-        "##########",
+        /*"##########",
         "#X.......#",
         "#..@....@#",
         "#........#",
         "#..*....*#",
-        "##########"
+        "##########"*/
+        
+        
+        "..........",
+        ".########.",
+        ".#X.....#.",
+        ".#...@..#.",
+        ".#..@.@*#.",
+        ".#.@.@.*#.",
+        ".#..@.@*#.",
+        ".#..****#.",
+        ".########.",
+        ".........."
+            
+        /*".........",
+        ".#######.",
+        ".#X....#.",
+        ".#...@.#.",
+        ".#..@.*#.",
+        ".#.@.@*#.",
+        ".#..**.#.",
+        ".#######.",
+        "........."*/
+
+
+
         
         /*"#######",
         "#*.#..#",
@@ -167,7 +192,7 @@ public class Map
     {
         List<(int x, int y)> tmpBoxes = new(boxes);
         int index = tmpBoxes.FindIndex(box =>
-            box.x == playerPos.x - delta.x && box.y == playerPos.y - delta.y); // Fix: (x, y)
+            (box.x == playerPos.x - delta.x) && (box.y == playerPos.y - delta.y)); // Fix: (x, y)
         if (index != -1)
         {
             tmpBoxes[index] = (playerPos.x, playerPos.y); // Fix: (x, y)

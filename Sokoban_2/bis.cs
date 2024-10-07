@@ -44,27 +44,27 @@ public class bis
     {
         foreach (var state in BFS)
         {
-            if (BIS.Contains(state) || BISVisited.Contains(state))
+            State? tmp = IndexOf(BIS, state);
+            if (tmp == null)
             {
-                setMovesBFS(state);
-                State tmp = IndexOf(BIS, state);
-                if (tmp == null)
-                    tmp = IndexOf(BISVisited, state);
-                setMovesBIS(tmp);
-                return true;
+                tmp = IndexOf(BISVisited, state);
+                if(tmp == null)
+                  continue;  
             }
+            setMovesBIS(tmp);
+            setMovesBFS(state);
+            return true;
         }
         foreach (var state in BIS)
         {
-            if (BFSVisited.Contains(state))
+            State? tmp =IndexOf(BFSVisited, state);
+            if (tmp == null)
             {
-                setMovesBIS(state);
-                State tmp = IndexOf(BFS, state);
-                if (tmp == null)
-                    tmp = IndexOf(BFSVisited, state);
-                setMovesBFS(tmp);
-                return true;
+                continue;  
             }
+            setMovesBIS(state);
+            setMovesBFS(tmp);
+            return true;
         }
 
         return false;
@@ -129,9 +129,9 @@ public class bis
             (-1, 0)   // Влево
         };
 
-        foreach (var move in moves)
+        foreach (var point in pointPos)
         {
-            foreach (var point in pointPos)
+            foreach (var move in moves)
             {
                 (int x, int y) newPlayerPos = (point.x + move.dx, point.y + move.dy);
             
@@ -187,7 +187,7 @@ public class bis
         foreach (var dir in directions)
         {
             (int x, int y) newPos = (current.PlayerPosition.x + dir.x, current.PlayerPosition.y + dir.y);
-            if (Map.LevelMap[newPos.y][newPos.x]=='.')
+            if (Map.LevelMap[newPos.y][newPos.x]!='#' && !current.BoxPositions.Contains(newPos) || current.PointPosition.Contains(newPos) && !current.BoxPositions.Contains(newPos))
             {
                 State moveState = new State(newPos, current.BoxPositions, current.PointPosition, current);
                 moves.Add(moveState);
@@ -206,16 +206,20 @@ public class bis
     public void ReadAllMoves()
     {
         //Console.WriteLine("BFS:");
+        int count = 0;
         MovesBFS.Reverse();
         for(int i=0;i<MovesBFS.Count;i++)
         {
+            count++;
             Console.WriteLine($"({i} x={MovesBFS[i].PlayerPosition.x} y={MovesBFS[i].PlayerPosition.y})");
         }
         Console.WriteLine("BIS:");
         for (int i = 1; i < MovesBIS.Count; i++)
         {
+            count++;
             Console.WriteLine($"({MovesBIS[i].PlayerPosition.x} {MovesBIS[i].PlayerPosition.y})");
         }
+        Console.WriteLine(count);
     }
     
     public void setMovesBFS(State bfs)//обязательно переименовать
@@ -233,7 +237,7 @@ public class bis
             setMovesBIS(bis.prevMove);
     }
     
-    public  State IndexOf( Queue<State> collection, State searchItem)
+    public  State? IndexOf( Queue<State> collection, State searchItem)
     {
         State index;
 
@@ -247,7 +251,7 @@ public class bis
 
         return null;
     }
-    public  State IndexOf( List<State> collection, State searchItem)
+    public  State? IndexOf( List<State> collection, State searchItem)
     {
         State index;
 
