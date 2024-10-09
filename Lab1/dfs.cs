@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -94,6 +96,9 @@ public class dfs
     {
         return countIteration;
     }
+
+
+    
 
     public void _DFS_()//поиск в глубину
     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.PerformanceData;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,13 +25,14 @@ public class iddfs
         public List<(int x, int y)> BoxPositions;
         public List<(int x, int y)> PointPosition;
         public State prevMove = null;
-
-        public State((int x, int y) playerPos, List<(int x, int y)> boxPos, List<(int x, int y)> pointPos, State state)
+        public int depthNode = 0;
+        public State((int x, int y) playerPos, List<(int x, int y)> boxPos, List<(int x, int y)> pointPos, State state /*int depthNode*/)
         {
             this.PlayerPosition = (playerPos.x, playerPos.y);
             this.BoxPositions = new List<(int x, int y)>(boxPos);
             this.PointPosition = new List<(int x, int y)>(pointPos);
             this.prevMove = state;//предыдущий шаг
+            //this.depthNode = depthNode;//глубина узла
         }
 
         public override bool Equals(object obj)
@@ -110,8 +112,8 @@ public class iddfs
             if (player.CanMove(current.PlayerPosition, dir, current.BoxPositions))
             {
                 var tmpBoxes = Map.Instance.MoveBox(current.PlayerPosition, dir, current.BoxPositions);
-                moves.Add(new State(newPos, tmpBoxes, current.PointPosition, current));//в конце current -> это предыдущий шаг
-                countNode++;
+                moves.Add(new State(newPos, tmpBoxes, current.PointPosition, current/*,current.depthNode*/));//в конце current -> это предыдущий шаг, глубина текущего нода
+
             }
         }
         return moves;
@@ -164,7 +166,7 @@ public class iddfs
         {
             countIteration++;
             Visited.Clear();
-            var result = DLS(new State(Map.Instance.GetPlayerPos(), Map.Instance.GetBoxPosition(), Map.Instance.GetPointPosition(), null), depthLimit);
+            var result = DLS(new State(Map.Instance.GetPlayerPos(), Map.Instance.GetBoxPosition(), Map.Instance.GetPointPosition(), null),0, depthLimit);
             if (result != null)
             {
                 fillMovesWin(result);
@@ -173,35 +175,32 @@ public class iddfs
                 return;
             }
             depthLimit++;
-            Console.WriteLine(depthLimit);
         }
     }
 
-    private State DLS(State current, int depth)
+    private State DLS(State current, int depth, int limit)
     {
-        if (IsGoalState(current))
+        if (depth < limit)
         {
-            return current;
-        }
-
-        if (depth == 0)
-        {
-            return null; // Если достигли предела глубины, возвращаем null
-        }
-
-        Visited.Add(current); // Помечаем состояние как посещённое
-        foreach (var move in GetPossibleMoves(current))
-        {
-            if (!Visited.Contains(move)) // Проверяем на посещённость
+            if (IsGoalState(current))
             {
-                var result = DLS(move, depth - 1); // Рекурсивный вызов DLS на следующем уровне
-                if (result != null)
+                return current;
+            }
+
+            Visited.Add(current); // Помечаем состояние как посещённое
+            foreach (var move in GetPossibleMoves(current))
+            {
+                countNode++;
+                if (!Visited.Contains(move)) // Проверяем на посещённость
                 {
-                    return result; // Если решение найдено, возвращаем его
+                    var result = DLS(move,depth+1,limit); // Рекурсивный вызов DLS на следующем уровне
+                    if (result != null)
+                    {
+                        return result; // Если решение найдено, возвращаем его
+                    }
                 }
             }
         }
-
         Visited.Remove(current); // Убираем состояние из посещённых, чтобы позволить исследовать другие пути на уровнях выше
         return null; // Если решение не найдено на данном уровне, возвращаем null
     }
